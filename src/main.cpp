@@ -41,7 +41,9 @@ struct MyApp : public winrt::Microsoft::UI::Xaml::ApplicationT<MyApp>
 {
   MyApp()
   {
-    RequestedTheme(winrt::Microsoft::UI::Xaml::ApplicationTheme::Dark);
+    ::winrt::Windows::Foundation::Uri resourceLocator{ L"ms-appx:///App.xaml" };
+    ::winrt::Microsoft::UI::Xaml::Application::LoadComponent(*this, resourceLocator);
+
     UnhandledException([this](IInspectable const &, winrt::Microsoft::UI::Xaml::UnhandledExceptionEventArgs const &e)
                        {
         if (IsDebuggerPresent()) {
@@ -53,7 +55,6 @@ struct MyApp : public winrt::Microsoft::UI::Xaml::ApplicationT<MyApp>
   void OnLaunched(const winrt::Microsoft::UI::Xaml::LaunchActivatedEventArgs &)
   {
     // Exception thrown at 0x00007FFA07C74F69 (KernelBase.dll) in DemoApp.exe: WinRT originate error - 0x80004005 : 'Cannot find a resource with the given key: AcrylicBackgroundFillColorDefaultBrush.'.
-    muxc::XamlControlsResources x;
     // ... if it werent' for that exception, I'd add it to `Resources()` here
     winrt::make<MainWindow>().Activate();
   }

@@ -19,6 +19,7 @@ add_custom_target(
   COMMAND
   ${CMAKE_COMMAND} -E copy_if_different
   "$<TARGET_RUNTIME_DLLS:DemoApp>"
+  "${CMAKE_CURRENT_SOURCE_DIR}/App.xaml"
   "$<TARGET_FILE_DIR:DemoApp>"
   COMMAND_EXPAND_LISTS
 )
