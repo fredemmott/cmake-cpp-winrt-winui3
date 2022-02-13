@@ -12,39 +12,66 @@
 // APIs for now, to be closer to what Visual Studio does
 #include <MddBootstrapAutoInitializer.cpp>
 
+#include <functional>
+
 namespace muxc = winrt::Microsoft::UI::Xaml::Controls;
 
 struct MainWindow : public winrt::Microsoft::UI::Xaml::WindowT<MainWindow>
 {
 private:
   muxc::NavigationView mNav;
-  muxc::Frame mContent;
+
+  muxc::NavigationViewItem mNav1, mNav2, mNav3;
 
 public:
   MainWindow()
   {
+    Title(L"CMake, C++/WinRT, and WinUI 3 Demo App");
+
     mNav.Header(winrt::box_value(L"CMake, C++/WinRT, and WinUI 3 Demo App"));
-    mNav.Content(mContent);
+    mNav.Content(winrt::box_value(L"Initial Content"));
     mNav.IsSettingsVisible(false);
 
-    muxc::NavigationViewItem item1;
-    item1.Content(winrt::box_value(L"Item 1"));
-    item1.Icon(muxc::SymbolIcon(muxc::Symbol::Play));
-    mNav.MenuItems().Append(item1);
+    mNav1.Content(winrt::box_value(L"Item 1"));
+    mNav1.Icon(muxc::SymbolIcon(muxc::Symbol::Play));
+    mNav.MenuItems().Append(mNav1);
 
-    muxc::NavigationViewItem item2;
-    item2.Content(winrt::box_value(L"Item 2"));
-    item2.Icon(muxc::SymbolIcon(muxc::Symbol::Copy));
-    mNav.MenuItems().Append(item2);
+    mNav2.Content(winrt::box_value(L"Item 2"));
+    mNav2.Icon(muxc::SymbolIcon(muxc::Symbol::Copy));
+    mNav.MenuItems().Append(mNav2);
 
-    muxc::NavigationViewItem item3;
-    item3.Content(winrt::box_value(L"Item 3"));
-    item3.Icon(muxc::SymbolIcon(muxc::Symbol::Paste));
-    mNav.MenuItems().Append(item3);
+    mNav3.Content(winrt::box_value(L"Item 3"));
+    mNav3.Icon(muxc::SymbolIcon(muxc::Symbol::Paste));
+    mNav.MenuItems().Append(mNav3);
 
     mNav.IsSettingsVisible(true);
 
+    mNav.SelectionChanged({this, &MainWindow::OnSelectionChanged});
+
     Content(mNav);
+  }
+
+  void OnSelectionChanged(const IInspectable&, const muxc::NavigationViewSelectionChangedEventArgs& args) {
+    if (args.IsSettingsSelected()) {
+      mNav.Content(winrt::box_value(L"Settings go here"));
+      return;
+    }
+
+    const auto& item = args.SelectedItem();
+    if (item == mNav1) {
+      mNav.Content(winrt::box_value(L"Page 1 goes here"));
+      return;
+    }
+
+    if (item == mNav2) {
+      mNav.Content(winrt::box_value(L"Page 2 goes here"));
+      return;
+    }
+
+    if (item == mNav3) {
+      mNav.Content(winrt::box_value(L"Page 3 goes here"));
+      return;
+    }
   }
 };
 
@@ -69,8 +96,6 @@ public:
 
   void OnLaunched(const winrt::Microsoft::UI::Xaml::LaunchActivatedEventArgs &)
   {
-    // Exception thrown at 0x00007FFA07C74F69 (KernelBase.dll) in DemoApp.exe: WinRT originate error - 0x80004005 : 'Cannot find a resource with the given key: AcrylicBackgroundFillColorDefaultBrush.'.
-    // ... if it werent' for that exception, I'd add it to `Resources()` here
     winrt::make<MainWindow>().Activate();
   }
 
