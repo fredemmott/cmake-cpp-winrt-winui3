@@ -1,7 +1,6 @@
 #include <Unknwn.h>
 #undef GetCurrentTime
 #include <winrt/base.h>
-#include <winrt/DemoApp.h>
 #include <winrt/Microsoft.UI.Xaml.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 #include <winrt/Microsoft.UI.Xaml.Markup.h>
@@ -18,35 +17,6 @@
 #include <MddBootstrapAutoInitializer.cpp>
 
 namespace muxc = winrt::Microsoft::UI::Xaml::Controls;
-
-// FIXME: This *really* needs splitting out, but it's late, and I don't want to
-// leave this unsaved.
-
-#include "DemoApp/MyPage.g.h"
-
-namespace winrt::DemoApp::implementation
-{
-  struct MyPage : MyPageT<MyPage>
-  {
-    void OnNavigatedTo(const winrt::Microsoft::UI::Xaml::Navigation::NavigationEventArgs &ev)
-    {
-      muxc::TextBlock text;
-      text.Text(ev.Parameter().as<winrt::hstring>());
-      Content(text);
-    }
-  };
-}
-
-namespace winrt::DemoApp::factory_implementation
-{
-    struct MyPage: MyPageT<MyPage, implementation::MyPage>
-    {
-    };
-}
-
-#include "DemoApp/MyPage.g.cpp"
-
-using namespace winrt::DemoApp;
 
 struct MainWindow : public winrt::Microsoft::UI::Xaml::WindowT<MainWindow>
 {
@@ -90,26 +60,26 @@ public:
   {
     if (args.IsSettingsSelected())
     {
-      mContent.Navigate(winrt::xaml_typename<MyPage>(), winrt::box_value(L"Settings Go here"));
+      mContent.Content(winrt::box_value(L"Settings"));
       return;
     }
 
     const auto &item = args.SelectedItem();
     if (item == mNav1)
     {
-      mContent.Navigate(winrt::xaml_typename<MyPage>(), winrt::box_value(L"Page 1 Goes Here"));
+      mContent.Content(winrt::box_value(L"Item 1"));
       return;
     }
 
     if (item == mNav2)
     {
-      mContent.Navigate(winrt::xaml_typename<MyPage>(), winrt::box_value(L"Page 2 Goes Here"));
+      mContent.Content(winrt::box_value(L"Item 2"));
       return;
     }
 
     if (item == mNav3)
     {
-      mContent.Navigate(winrt::xaml_typename<MyPage>(), winrt::box_value(L"Page 3 Goes Here"));
+      mContent.Content(winrt::box_value(L"Item 3"));
       return;
     }
   }
