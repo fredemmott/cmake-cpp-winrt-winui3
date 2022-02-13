@@ -18,9 +18,9 @@ add_dependencies(CppWinRT-Exe cppwinrtBuild)
 set_target_properties(CppWinRT-Exe PROPERTIES IMPORTED_LOCATION "${SOURCE_DIR}/bin/cppwinrt.exe")
 
 
-add_library(CppWinRT-Lib INTERFACE)
-add_dependencies(CppWinRT-Lib cppwinrtBuild)
-target_link_libraries(CppWinRT-Lib INTERFACE WindowsApp.lib)
+add_library(CppWinRT-Base INTERFACE)
+add_dependencies(CppWinRT-Base cppwinrtBuild)
+target_link_libraries(CppWinRT-Base INTERFACE WindowsApp.lib)
 
 ExternalProject_Get_property(cppwinrtBuild BINARY_DIR)
-target_include_directories(CppWinRT-Lib INTERFACE "${BINARY_DIR}/include")
+target_include_directories(CppWinRT-Base INTERFACE "${BINARY_DIR}/include")

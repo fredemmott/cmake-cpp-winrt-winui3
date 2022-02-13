@@ -1,25 +1,59 @@
 #include <Unknwn.h>
 #undef GetCurrentTime
 #include <winrt/base.h>
+#include <winrt/DemoApp.h>
 #include <winrt/Microsoft.UI.Xaml.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 #include <winrt/Microsoft.UI.Xaml.Markup.h>
+#include <winrt/Microsoft.UI.Xaml.Navigation.h>
 #include <winrt/Microsoft.UI.Xaml.XamlTypeInfo.h>
 #include <winrt/Microsoft.Windows.ApplicationModel.DynamicDependency.h>
 #include <winrt/Windows.Foundation.Collections.h>
+#include <winrt/Windows.UI.Xaml.Interop.h>
+
+#include <functional>
 
 // Undocumented static initializer for MddBootstrap; using it instead of documented
 // APIs for now, to be closer to what Visual Studio does
 #include <MddBootstrapAutoInitializer.cpp>
 
-#include <functional>
-
 namespace muxc = winrt::Microsoft::UI::Xaml::Controls;
+
+// FIXME: This *really* needs splitting out, but it's late, and I don't want to
+// leave this unsaved.
+
+#include "DemoApp/MyPage.g.h"
+
+namespace winrt::DemoApp::implementation
+{
+  struct MyPage : MyPageT<MyPage>
+  {
+    void OnNavigatedTo(const winrt::Microsoft::UI::Xaml::Navigation::NavigationEventArgs &ev)
+    {
+      muxc::TextBlock text;
+      text.Text(ev.Parameter().as<winrt::hstring>());
+      Content(text);
+    }
+  };
+}
+
+namespace winrt::DemoApp::factory_implementation
+{
+    struct MyPage: MyPageT<MyPage, implementation::MyPage>
+    {
+    };
+}
+
+#include "DemoApp/MyPage.g.cpp"
+
+using namespace winrt::DemoApp;
 
 struct MainWindow : public winrt::Microsoft::UI::Xaml::WindowT<MainWindow>
 {
 private:
   muxc::NavigationView mNav;
+
+  muxc::Frame mContent;
 
   muxc::NavigationViewItem mNav1, mNav2, mNav3;
 
@@ -29,7 +63,7 @@ public:
     Title(L"CMake, C++/WinRT, and WinUI 3 Demo App");
 
     mNav.Header(winrt::box_value(L"CMake, C++/WinRT, and WinUI 3 Demo App"));
-    mNav.Content(winrt::box_value(L"Initial Content"));
+    mNav.Content(mContent);
     mNav.IsSettingsVisible(false);
 
     mNav1.Content(winrt::box_value(L"Item 1"));
@@ -48,28 +82,34 @@ public:
 
     mNav.SelectionChanged({this, &MainWindow::OnSelectionChanged});
 
+    mNav.SelectedItem(mNav1);
     Content(mNav);
   }
 
-  void OnSelectionChanged(const IInspectable&, const muxc::NavigationViewSelectionChangedEventArgs& args) {
-    if (args.IsSettingsSelected()) {
-      mNav.Content(winrt::box_value(L"Settings go here"));
+  void OnSelectionChanged(const IInspectable &, const muxc::NavigationViewSelectionChangedEventArgs &args)
+  {
+    if (args.IsSettingsSelected())
+    {
+      mContent.Navigate(winrt::xaml_typename<MyPage>(), winrt::box_value(L"Settings Go here"));
       return;
     }
 
-    const auto& item = args.SelectedItem();
-    if (item == mNav1) {
-      mNav.Content(winrt::box_value(L"Page 1 goes here"));
+    const auto &item = args.SelectedItem();
+    if (item == mNav1)
+    {
+      mContent.Navigate(winrt::xaml_typename<MyPage>(), winrt::box_value(L"Page 1 Goes Here"));
       return;
     }
 
-    if (item == mNav2) {
-      mNav.Content(winrt::box_value(L"Page 2 goes here"));
+    if (item == mNav2)
+    {
+      mContent.Navigate(winrt::xaml_typename<MyPage>(), winrt::box_value(L"Page 2 Goes Here"));
       return;
     }
 
-    if (item == mNav3) {
-      mNav.Content(winrt::box_value(L"Page 3 goes here"));
+    if (item == mNav3)
+    {
+      mContent.Navigate(winrt::xaml_typename<MyPage>(), winrt::box_value(L"Page 3 Goes Here"));
       return;
     }
   }
@@ -100,13 +140,13 @@ public:
   }
 
   winrt::Microsoft::UI::Xaml::Markup::IXamlType
-  GetXamlType(const winrt::hstring& fullName)
+  GetXamlType(const winrt::hstring &fullName)
   {
     return mXamlControlsMetaDataProvider.GetXamlType(fullName);
   }
 
   winrt::Microsoft::UI::Xaml::Markup::IXamlType
-  GetXamlType(const winrt::Windows::UI::Xaml::Interop::TypeName& type)
+  GetXamlType(const winrt::Windows::UI::Xaml::Interop::TypeName &type)
   {
     return mXamlControlsMetaDataProvider.GetXamlType(type);
   }

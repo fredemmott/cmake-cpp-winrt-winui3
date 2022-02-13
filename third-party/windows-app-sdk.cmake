@@ -10,8 +10,8 @@ ExternalProject_Add(
   BUILD_COMMAND
     "$<TARGET_FILE:CppWinRT-Exe>"
     -in "<SOURCE_DIR>/lib/uap10.0.18362"
+    -in "<SOURCE_DIR>/lib/uap10.0"
     -reference local
-    -reference "<SOURCE_DIR>/lib/uap10.0"
     -output "<BINARY_DIR>/include"
   INSTALL_COMMAND ""
 
@@ -20,9 +20,45 @@ ExternalProject_Add(
 
 ExternalProject_Get_property(WindowsAppSDKSource SOURCE_DIR)
 ExternalProject_Get_property(WindowsAppSDKSource BINARY_DIR)
+
+set(WINDOWS_APP_SDK_SOURCE_DIR "${SOURCE_DIR}" PARENT_SCOPE)
+
+function(add_cppwinrt TARGET SOURCE_IDL)
+  set(
+    GENERATED_CPP_FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/winrt-components/module.g.cpp"
+  )
+  add_custom_command(
+    OUTPUT ${GENERATED_CPP_FILES}
+    COMMAND
+    "$<TARGET_FILE:CppWinRT-Exe>"
+    -in "${CMAKE_CURRENT_BINARY_DIR}"
+    -pch .
+    -reference "${WINDOWS_APP_SDK_SOURCE_DIR}/lib/uap10.0.18362"
+    -reference "${WINDOWS_APP_SDK_SOURCE_DIR}/lib/uap10.0"
+    -reference local
+    -component
+    -optimize
+    -output "${CMAKE_CURRENT_BINARY_DIR}/winrt-components"
+    MAIN_DEPENDENCY "${SOURCE_IDL}"
+  )
+  add_library("${TARGET}" STATIC "${GENERATED_CPP_FILES}")
+  set_target_properties(
+    "${TARGET}"
+    PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+  )
+  target_include_directories(
+    "${TARGET}"
+    PUBLIC
+    "${CMAKE_CURRENT_BINARY_DIR}/winrt-components"
+  )
+  target_link_libraries("${TARGET}" CppWinRT-Base)
+endfunction()
 add_library(WindowsAppSDK INTERFACE)
 add_dependencies(WindowsAppSDK WindowsAppSDKSource)
-target_link_libraries(WindowsAppSDK INTERFACE CppWinRT-Lib)
+target_link_libraries(WindowsAppSDK INTERFACE CppWinRT-Base)
 target_include_directories(
   WindowsAppSDK
   INTERFACE
@@ -38,24 +74,7 @@ set_target_properties(
   IMPORTED_IMPLIB "${SOURCE_DIR}/lib/win10-x64/Microsoft.WindowsAppRuntime.Bootstrap.lib"
   IMPORTED_LOCATION "${SOURCE_DIR}/runtimes/win10-x64/native/Microsoft.WindowsAppRuntime.Bootstrap.dll"
 )
-target_link_libraries(WindowsAppRuntime-Bootstrap INTERFACE WindowsAppSDK)
-
-add_library(
-  WindowsAppRuntime-MddBootstrapAutoInitializer
-  STATIC
-  "${SOURCE_DIR}/include/MddBootstrapAutoInitializer.cpp"
-)
-set_target_properties(
-  WindowsAppRuntime-MddBootstrapAutoInitializer
-  PROPERTIES
-  CXX_STANDARD 17
-  CXX_STANDARD_REQUIRED ON
-)
-target_link_libraries(
-  WindowsAppRuntime-MddBootstrapAutoInitializer
-  PRIVATE WindowsAppRuntime-Bootstrap
-)
-
+target_link_libraries(WindowsAppSDK INTERFACE WindowsAppRuntime-Bootstrap)
 
 add_library(WindowsAppRuntime-MRM SHARED IMPORTED GLOBAL)
 add_dependencies(WindowsAppRuntime-MRM WindowsAppSDKSource)
@@ -74,3 +93,5 @@ set_target_properties(
 )
 target_link_libraries(WindowsAppRuntime INTERFACE WindowsAppRuntime-Bootstrap WindowsAppRuntime-MRM)
 target_link_libraries(WindowsAppSDK INTERFACE WindowsAppRuntime)
+
+set(WINDOWS_APP_SDK_DIR "${SOURCE_DIR}" PARENT_SCOPE)

@@ -1,0 +1,9 @@
+// MyPage.idl
+namespace DemoApp
+{
+  [default_interface]
+  runtimeclass MyPage : Microsoft.UI.Xaml.Controls.Page
+  {
+    MyPage();
+  }
+}
