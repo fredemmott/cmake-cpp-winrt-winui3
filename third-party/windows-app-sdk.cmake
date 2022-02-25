@@ -21,6 +21,41 @@ ExternalProject_Add(
 ExternalProject_Get_property(WindowsAppSDKSource SOURCE_DIR)
 ExternalProject_Get_property(WindowsAppSDKSource BINARY_DIR)
 
+set(WINDOWS_APP_SDK_SOURCE_DIR "${SOURCE_DIR}" PARENT_SCOPE)
+
+function(add_cppwinrt TARGET SOURCE_IDL)
+  set(
+    GENERATED_CPP_FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/winrt-components/module.g.cpp"
+  )
+  add_custom_command(
+    OUTPUT ${GENERATED_CPP_FILES}
+    COMMAND
+    "$<TARGET_FILE:CppWinRT-Exe>"
+    -in "${CMAKE_CURRENT_BINARY_DIR}"
+    -pch .
+    -reference "${WINDOWS_APP_SDK_SOURCE_DIR}/lib/uap10.0.18362"
+    -reference "${WINDOWS_APP_SDK_SOURCE_DIR}/lib/uap10.0"
+    -reference local
+    -component
+    -optimize
+    -output "${CMAKE_CURRENT_BINARY_DIR}/winrt-components"
+    MAIN_DEPENDENCY "${SOURCE_IDL}"
+  )
+  add_library("${TARGET}" STATIC "${GENERATED_CPP_FILES}")
+  set_target_properties(
+    "${TARGET}"
+    PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+  )
+  target_include_directories(
+    "${TARGET}"
+    PUBLIC
+    "${CMAKE_CURRENT_BINARY_DIR}/winrt-components"
+  )
+  target_link_libraries("${TARGET}" CppWinRT-Base)
+endfunction()
 add_library(WindowsAppSDK INTERFACE)
 add_dependencies(WindowsAppSDK WindowsAppSDKSource)
 target_link_libraries(WindowsAppSDK INTERFACE CppWinRT-Base)
