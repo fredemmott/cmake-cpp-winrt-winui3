@@ -1,9 +1,16 @@
+# Patch up the generated vcxproj
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/Directory.Build.targets"
+  "${CMAKE_CURRENT_BINARY_DIR}/Directory.Build.targets"
+  COPYONLY
+)
+
 add_executable(
   DemoApp
   WIN32
   app.manifest
-  App.xaml.cpp App.xaml App.idl
-  MainWindow.xaml.cpp MainWindow.xaml MainWindow.idl
+  App.xaml.cpp App.xaml.h App.xaml App.idl
+  MainWindow.xaml.cpp MainWindow.xaml.h MainWindow.xaml MainWindow.idl
 )
 set_property(
   SOURCE App.xaml
@@ -16,6 +23,7 @@ set_property(
   "Microsoft.Windows.CppWinRT_2.0.220608.4"
   "Microsoft.WindowsAppSDK_1.1.1"
   "Microsoft.Windows.SDK.BuildTools_10.0.22621.1"
+  "Microsoft.Windows.ImplementationLibrary_1.0.220201.1"
 )
 set_target_properties(
   DemoApp
@@ -32,7 +40,13 @@ set_target_properties(
   VS_GLOBAL_ApplicationType "Windows Store"
   VS_GLOBAL_WindowsPackageType None
   VS_GLOBAL_EnablePreviewMsixTooling true
+  VS_GLOBAL_WindowsAppSDKSelfContained true
   # Skip the "ResolveNuGetPackageAssets" target as it fails with an empty sequence error
   # Not certain why - I *think* that none of the packages we use have assets
   VS_GLOBAL_ResolveNuGetPackages false
+)
+target_include_directories(
+  DemoApp
+  PRIVATE
+  "${CMAKE_CURRENT_SOURCE_DIR}"
 )
