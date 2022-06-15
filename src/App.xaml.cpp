@@ -1,3 +1,5 @@
+#include "App.xaml.h"
+
 #include <Unknwn.h>
 #undef GetCurrentTime
 #include <winrt/base.h>
