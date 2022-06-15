@@ -26,7 +26,6 @@ set_target_properties(
   VS_GLOBAL_RootNamespace DemoApp
   VS_GLOBAL_AppContainerApplication false
   VS_GLOBAL_AppxPackage false
-  VS_GLOBAL_CppWinRTEnabled true
   VS_GLOBAL_CppWinRTOptimized true
   VS_GLOBAL_CppWinRTRootNamespaceAutoMerge true
   VS_GLOBAL_UseWinUI true
