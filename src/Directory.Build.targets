@@ -1,7 +1,4 @@
 <Project>
-  <PropertyGroup>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
   </ItemGroup>
