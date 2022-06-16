@@ -31,11 +31,6 @@ target_include_directories(
   PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}"
 )
-target_precompile_headers(
-  DemoApp
-  PRIVATE
-  pch.h
-)
 set_target_properties(
   DemoApp
   PROPERTIES
