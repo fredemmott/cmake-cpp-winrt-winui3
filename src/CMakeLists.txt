@@ -1,5 +1,10 @@
 # Patch up the generated vcxproj
 configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/Directory.Build.props"
+  "${CMAKE_CURRENT_BINARY_DIR}/Directory.Build.props"
+  COPYONLY
+)
+configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/Directory.Build.targets"
   "${CMAKE_CURRENT_BINARY_DIR}/Directory.Build.targets"
   COPYONLY
@@ -48,7 +53,4 @@ set_target_properties(
   VS_GLOBAL_WindowsPackageType None
   VS_GLOBAL_EnablePreviewMsixTooling true
   VS_GLOBAL_WindowsAppSDKSelfContained true
-  # Skip the "ResolveNuGetPackageAssets" target as it fails with an empty sequence error
-  # Not certain why - I *think* that none of the packages we use have assets
-  VS_GLOBAL_ResolveNuGetPackages false
 )
