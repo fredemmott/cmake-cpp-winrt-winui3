@@ -9,6 +9,6 @@ set(
 	"MultiThreaded$<$<CONFIG:Debug>:Debug>"
 )
 add_link_options(
-	"/DEFAULTLIB:ucrt$<$<CONFIG:Debug>:d>.lib" # include the static UCRT
-	"/NODEFAULTLIB:libucrt$<$<CONFIG:Debug>:d>.lib" # ignore the dynamic UCRT
+	"/DEFAULTLIB:ucrt$<$<CONFIG:Debug>:d>.lib" # include the dynamic UCRT
+	"/NODEFAULTLIB:libucrt$<$<CONFIG:Debug>:d>.lib" # ignore the static UCRT
 )
