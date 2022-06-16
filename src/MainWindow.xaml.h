@@ -6,6 +6,14 @@
 namespace winrt::DemoApp::implementation {
 struct MainWindow : MainWindowT<MainWindow> {
   MainWindow();
+
+  void Navigate(
+    const IInspectable& sender,
+    const Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs&) noexcept;
+
+  void GoBack(
+    const IInspectable& sender,
+    const Microsoft::UI::Xaml::Controls::NavigationViewBackRequestedEventArgs&) noexcept;
 };
 }
 

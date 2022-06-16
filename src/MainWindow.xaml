@@ -7,5 +7,25 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d"
   >
-  <TextBlock>Hello, world</TextBlock>
+  <NavigationView
+    x:Name="Navigation"
+    IsBackEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}"
+    BackRequested="GoBack"
+    ItemInvoked="Navigate">
+    <NavigationView.MenuItems>
+      <NavigationViewItem Content="How to jump">
+        <NavigationViewItem.Icon><FontIcon Glyph="&#xF093;" /></NavigationViewItem.Icon>
+      </NavigationViewItem>
+      <NavigationViewItem Content="How to crouch">
+        <NavigationViewItem.Icon><FontIcon Glyph="&#xF094;" /></NavigationViewItem.Icon>
+      </NavigationViewItem>
+      <NavigationViewItem Content="How to reload">
+        <NavigationViewItem.Icon><FontIcon Glyph="&#xF096;" /></NavigationViewItem.Icon>
+      </NavigationViewItem>
+      <NavigationViewItem Content="Indecisiveness">
+        <NavigationViewItem.Icon><FontIcon Glyph="&#xF095;" /></NavigationViewItem.Icon>
+      </NavigationViewItem>
+    </NavigationView.MenuItems>
+    <Frame x:Name="Frame" />
+  </NavigationView>
 </Window>

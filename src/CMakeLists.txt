@@ -10,6 +10,7 @@ add_executable(
   WIN32
   app.manifest
   App.xaml.cpp App.xaml.h App.xaml App.idl
+  DemoPage.xaml.cpp DemoPage.xaml.h DemoPage.xaml DemoPage.idl
   MainWindow.xaml.cpp MainWindow.xaml.h MainWindow.xaml MainWindow.idl
 )
 set_property(
