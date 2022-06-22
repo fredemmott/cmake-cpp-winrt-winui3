@@ -7,6 +7,10 @@ namespace winrt::DemoApp::implementation {
 
 MainWindow::MainWindow() {
   InitializeComponent();
+
+  auto arg = box_value(to_hstring(L"Hello, world"));
+  Frame().Navigate(xaml_typename<DemoPage>(), arg);
+  Frame().Navigate(xaml_typename<DemoPage>(), arg);
 }
 
 void MainWindow::Navigate(

@@ -3,12 +3,28 @@
 #include "DemoPage.g.cpp"
 #endif
 
+#include <winrt/Microsoft.UI.Input.h>
 #include <winrt/Microsoft.UI.Xaml.Navigation.h>
+
+using namespace winrt::Microsoft::UI::Input;
 
 namespace winrt::DemoApp::implementation {
 
-DemoPage::DemoPage() {
+DemoPage::DemoPage() noexcept {
   InitializeComponent();
+
+  auto weakThis = get_weak();
+
+  mDQC = DispatcherQueueController::CreateOnDedicatedThread();
+  mDQC.DispatcherQueue().TryEnqueue([weakThis]() noexcept {
+    auto strongThis = weakThis.get();
+    if (!strongThis) {
+      return;
+    }
+    strongThis->SwapChainPanel().CreateCoreIndependentInputSource(
+      InputPointerSourceDeviceKinds::Mouse | InputPointerSourceDeviceKinds::Pen
+      | InputPointerSourceDeviceKinds::Touch);
+  });
 }
 
 void DemoPage::OnNavigatedTo(

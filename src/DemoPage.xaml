@@ -10,5 +10,6 @@
     <TextBlock Margin="0,8,0,0" Style="{StaticResource BodyTextBlockStyle}">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel massa vitae tellus convallis varius non ut odio. Morbi vel justo pellentesque, tempus turpis in, consequat lectus. Aenean sed commodo augue. Mauris felis lorem, placerat ut lectus et, egestas pharetra lacus. Duis nec dapibus nunc. Integer massa erat, congue vel maximus eget, malesuada sed tortor. Nunc eu elit vitae est auctor sagittis ut et nisi. Proin vel vestibulum dolor.
     </TextBlock>
+    <SwapChainPanel x:Name="SwapChainPanel" Height="100" />
   </StackPanel>
 </Page>
