@@ -9,6 +9,8 @@
 
 ## Notes
 
+For a real-world application, see https://github.com/openkneeboard/openkneeboard
+
 * Xaml-related header files **must** be listed as targert sources
 * The `Directory.Build.targets` file is currently required; it slightly modifies the CMake generator
 * I've avoided `use namespace` to be explicit; I'm not aiming for this to be 'best practice', just to be unambiguous and minimal
