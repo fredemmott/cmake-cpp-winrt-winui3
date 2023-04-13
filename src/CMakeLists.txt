@@ -26,10 +26,10 @@ set_property(
 set_property(
   TARGET DemoApp
   PROPERTY VS_PACKAGE_REFERENCES
-  "Microsoft.Windows.CppWinRT_2.0.220608.4"
-  "Microsoft.WindowsAppSDK_1.1.1"
-  "Microsoft.Windows.SDK.BuildTools_10.0.22621.1"
-  "Microsoft.Windows.ImplementationLibrary_1.0.220201.1"
+  "Microsoft.Windows.CppWinRT_2.0.230225.1"
+  "Microsoft.WindowsAppSDK_1.3.230331000"
+  "Microsoft.Windows.SDK.BuildTools_ 10.0.22621.756"
+  "Microsoft.Windows.ImplementationLibrary_1.0.230411.1"
 )
 target_include_directories(
   DemoApp
