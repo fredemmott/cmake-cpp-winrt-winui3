@@ -2,10 +2,9 @@
 
 ![A screenshot of the app, showing a left hand navigation view](screenshot.png)
 
-## Requirements
+## Status
 
-* CMake 3.23 (April 2022) with the MSBuild generator is required
-* Windows App SDK 1.1 (June 2022); this uses self-contained mode to solve several problems, which is new in 1.1
+This is an as-is, unsupported, proof of concept. No help is available.
 
 ## Notes
 
